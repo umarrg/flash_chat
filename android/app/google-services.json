@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "781860695806",
+    "project_id": "flash-chat-4469f",
+    "storage_bucket": "flash-chat-4469f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:781860695806:android:237b35488491b4621bbfaf",
+        "android_client_info": {
+          "package_name": "co.umarabox.flash_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "781860695806-bci9tcs6qegui6g7sjkaqcrqk70gne7v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCpz8EWm0fNcqva2rgW5qO9RJvFv7l3hY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "781860695806-bci9tcs6qegui6g7sjkaqcrqk70gne7v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
