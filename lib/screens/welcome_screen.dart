@@ -1,4 +1,3 @@
-
 import 'package:flash_chat/components/rounded_buttom.dart';
 
 import 'package:flutter/material.dart';
@@ -52,11 +51,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Row(children: <Widget>[
-              Hero(
-                tag: 'logo',
-                child: Container(
-                  child: Image.asset('images/logo.png'),
-                  height: 60,
+              Flexible(
+                child: Hero(
+                  tag: 'logo',
+                  child: Container(
+                    child: Image.asset('images/logo.png'),
+                    height: 60,
+                  ),
                 ),
               ),
               Text(
