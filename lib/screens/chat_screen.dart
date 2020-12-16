@@ -1,10 +1,11 @@
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 final _firestore = FirebaseFirestore.instance;
+User loggedInUser;
 
 class ChatScreen extends StatefulWidget {
   static String id = 'chat_screen';
@@ -18,7 +19,6 @@ class _ChatScreenState extends State<ChatScreen> {
   String messageText;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  User loggedInUser;
 
   @override
   void initState() {
@@ -44,14 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
   //    }
   //  }
 
-  void messageStream() async {
-    await for (var snapshot in _firestore.collection('messages').snapshots()) {
-      for (var message in snapshot.docs) {
-        print(message.data());
-      }
-    }
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,9 +54,9 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
-                messageStream();
-                // _auth.signOut();
-                // Navigator.pop(context);
+               
+                _auth.signOut();
+                Navigator.pop(context);
               }),
         ],
         title: Text('⚡️Chat'),
@@ -74,6 +67,8 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            
+      
             MessageStream(),
             Container(
               decoration: kMessageContainerDecoration,
@@ -125,20 +120,26 @@ class MessageStream extends StatelessWidget {
             backgroundColor: Colors.lightBlue,
           ));
         }
-        final messages = snapshots.data.docs;
+        final messages = snapshots.data.docs.reversed;
         List<MessageBurble> messageBubbles = [];
         for (var message in messages) {
           final messageText = message.data()['text'];
           final messageSender = message.data()['sender'];
+          final currentUser = loggedInUser.email;
+          // if(currentUser == messageSender) {
+
+          // }
           final messageBubble = MessageBurble(
             sender: messageSender,
             text: messageText,
+            isme: currentUser == messageSender,
           );
 
           messageBubbles.add(messageBubble);
         }
         return Expanded(
           child: ListView(
+            reverse: true,
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
             children: messageBubbles,
           ),
@@ -149,17 +150,19 @@ class MessageStream extends StatelessWidget {
 }
 
 class MessageBurble extends StatelessWidget {
-  MessageBurble({@required this.sender, this.text});
+  MessageBurble({@required this.sender, this.text, this.isme});
 
   final String sender;
   final String text;
+  final bool isme;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment:
+            isme ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Text(
             sender,
@@ -167,13 +170,23 @@ class MessageBurble extends StatelessWidget {
           ),
           Material(
             elevation: 5.0,
-            borderRadius: BorderRadius.circular(30.0),
-            color: Colors.lightBlueAccent,
+            borderRadius: isme
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    bottomLeft: Radius.circular(30.0),
+                    bottomRight: Radius.circular(30.0))
+                : BorderRadius.only(
+                    bottomLeft: Radius.circular(30.0),
+                    bottomRight: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0)),
+            color: isme ? Colors.lightBlueAccent : Colors.white,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
               child: Text(
                 text,
-                style: TextStyle(fontSize: 15.0, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 15.0,
+                    color: isme ? Colors.white : Colors.black54),
               ),
             ),
           ),
